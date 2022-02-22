@@ -28,9 +28,9 @@
             "unit": "operations"
         },
         "proxy": {
-            "title": "Proxy configuration",
+            "title": "Proxy configuration (RESIDENTIAL RECOMMENDED)",
             "type": "object",
-            "description": "Select proxies to be used by your crawler.",
+            "description": "Select proxies to be used by your crawler. Use RESIDENTIAL if you're getting blocked/running out of cookies quickly",
             "editor": "proxy",
             "prefill": {
                 "useApifyProxy": true

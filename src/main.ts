@@ -32,9 +32,10 @@ Apify.main(async () => {
         requestQueue,
         requestList,
         useSessionPool: true,
-        persistCookiesPerSession: false,
+        persistCookiesPerSession: true,
         maxRequestRetries: 5,
         maxConcurrency,
+        ignoreSslErrors: true,
         preNavigationHooks: [
             async ({ request }) => {
                 // If request has been retried and there is a cookie, swap the cookie for a new one
