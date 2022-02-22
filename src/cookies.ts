@@ -1,6 +1,6 @@
 import Apify, { RequestOptions } from 'apify';
 
-const { log } = Apify.utils;
+const { log, puppeteer } = Apify.utils;
 
 const cookies: string[] = [];
 
@@ -42,6 +42,9 @@ export const farmCookies = async (amount: number | undefined = 5): Promise<void>
         requestList,
         useSessionPool: true,
         persistCookiesPerSession: true,
+        autoscaledPoolOptions: {
+            desiredConcurrency: amount,
+        },
         launchContext: {
             useChrome: true,
             launchOptions: {
@@ -50,6 +53,11 @@ export const farmCookies = async (amount: number | undefined = 5): Promise<void>
                 headless: true,
             },
         },
+        preNavigationHooks: [
+            async ({ page }) => {
+                await puppeteer.blockRequests(page);
+            },
+        ],
         handlePageFunction: async ({ session, request, response }) => {
             session.setCookiesFromResponse(response);
             const cookie = session.getCookieString(request.url);
@@ -57,6 +65,7 @@ export const farmCookies = async (amount: number | undefined = 5): Promise<void>
         },
     });
 
-    log.info(`Farming ${amount} cookies...`);
+    log.info(`Farming ${amount} cookie(s)...`);
     await crawler.run();
+    log.info(`Farmed ${amount} cookie(s)`);
 };

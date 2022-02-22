@@ -6,7 +6,7 @@ import { Schema, ResultsObject } from './types';
 const { log } = Apify.utils;
 
 Apify.main(async () => {
-    const { addresses, cookiesToScrape, proxy } = (await Apify.getInput()) as Schema;
+    const { addresses, cookiesToScrape = 5, proxy, maxConcurrency = 100 } = (await Apify.getInput()) as Schema;
 
     if (!addresses) throw new Error('Must provide at least one address!');
     await farmCookies(cookiesToScrape);
@@ -32,12 +32,13 @@ Apify.main(async () => {
         useSessionPool: true,
         persistCookiesPerSession: false,
         maxRequestRetries: 5,
+        maxConcurrency,
         preNavigationHooks: [
             async ({ request }) => {
                 // If request has been retried and there is a cookie, swap the cookie for a new one
                 if (request.retryCount) {
-                    if (!request.headers.cookie) return;
                     const { cookie } = request.headers;
+                    if (!cookie) return;
                     removeCookie(cookie);
                     request.headers.cookie = getCookie() as string;
                 }
@@ -50,11 +51,14 @@ Apify.main(async () => {
                 case consts.LABELS.FIND_ADDRESS: {
                     // Grab property ID
                     const { address } = request.userData;
+
                     log.info(`Grabbing PropertyID from ${address}...`);
+
                     const zpid = json.results[0]?.metaData?.zpid;
 
                     if (!zpid) {
                         log.warning(`${address} not found`);
+
                         await Apify.pushData({
                             zpid: null,
                             address,
@@ -79,7 +83,9 @@ Apify.main(async () => {
                     if (!zestimate) zestimate = 'N/A';
 
                     log.info(`Pushing Zestimate for ${address} to dataset`);
+
                     await Apify.pushData({ zpid, address, zestimate });
+                    break;
                 }
             }
         },

@@ -17,6 +17,16 @@
             "maximum": 100,
             "editor": "number"
         },
+        "maxConcurrency": {
+            "title": "maxConcurrency",
+            "type": "integer",
+            "description": "maxConcurrency",
+            "editor": "number",
+            "default": 100,
+            "maximum": 250,
+            "minimum": 1,
+            "unit": "operations"
+        },
         "proxy": {
             "title": "Proxy configuration",
             "type": "object",

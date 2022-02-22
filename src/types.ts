@@ -3,6 +3,7 @@ import { ProxyConfigurationOptions } from 'apify';
 export interface Schema {
     addresses?: string;
     cookiesToScrape?: number;
+    maxConcurrency?: number;
     proxy?: ProxyConfigurationOptions;
 }
 

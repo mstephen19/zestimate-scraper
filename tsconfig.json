@@ -3,7 +3,9 @@
     "compilerOptions": {
         "skipLibCheck": true,
         "outDir": "dist",
-        "removeComments": true
+        "removeComments": true,
+        "sourceMap": false,
+        "declarationMap": false
     },
     "include": ["./src/**/*"]
 }
