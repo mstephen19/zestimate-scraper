@@ -1,0 +1,22 @@
+{
+    "title": "Input schema for the hello_word actor.",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "addresses": {
+            "title": "Addresses",
+            "type": "array",
+            "description": "All addresses to scrape the \"Zestimate\" from",
+            "editor": "stringList"
+        },
+        "cookiesToScrape": {
+            "title": "Cookies to Scrape (Default: 5)",
+            "type": "integer",
+            "description": "The number of cookies to scrape, then use to scrape Zestimates. Increase this number if you have a lot of addresses. (Affects performance)",
+            "minimum": 1,
+            "maximum": 100,
+            "editor": "number"
+        }
+    },
+    "required": ["addresses"]
+}
