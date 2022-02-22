@@ -4,7 +4,7 @@ export interface Schema {
     addresses?: string;
     cookiesToScrape?: number;
     maxConcurrency?: number;
-    proxy?: ProxyConfigurationOptions;
+    proxy?: ProxyConfigurationOptions & { useApifyProxy: boolean };
 }
 
 export interface ResultsObject {

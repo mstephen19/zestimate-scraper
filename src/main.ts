@@ -11,6 +11,8 @@ Apify.main(async () => {
     if (!addresses) throw new Error('Must provide at least one address!');
     await farmCookies(cookiesToScrape);
 
+    if (!proxy?.useApifyProxy) throw new Error('Must use a proxy!');
+
     const requests: RequestOptions[] = [];
 
     // Add autocomplete request for every address
@@ -75,7 +77,7 @@ Apify.main(async () => {
                 }
                 case consts.LABELS.GET_ESTIMATE: {
                     const { address, zpid } = request.userData as Partial<ResultsObject>;
-                    const { data } = json;
+                    const { data } = json || {};
 
                     if (!data?.property) throw new Error(`Failed with ${address}. Trying again`);
 
