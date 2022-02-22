@@ -6,13 +6,14 @@ import { Schema, ResultsObject } from './types';
 const { log } = Apify.utils;
 
 Apify.main(async () => {
-    const { addresses, cookiesToScrape } = (await Apify.getInput()) as Schema;
+    const { addresses, cookiesToScrape, proxy } = (await Apify.getInput()) as Schema;
 
     if (!addresses) throw new Error('Must provide at least one address!');
     await farmCookies(cookiesToScrape);
 
     const requests: RequestOptions[] = [];
 
+    // Add autocomplete request for every address
     for (const address of addresses) {
         requests.push(consts.FIND_ADDRESS_REQUEST(address));
     }
@@ -20,8 +21,7 @@ Apify.main(async () => {
     const requestList = await Apify.openRequestList('start-urls', requests);
     const requestQueue = await Apify.openRequestQueue();
     const proxyConfiguration = await Apify.createProxyConfiguration({
-        groups: ['RESIDENTIAL'],
-        countryCode: 'US',
+        ...proxy,
     });
 
     const crawler = new Apify.CheerioCrawler({
@@ -34,6 +34,7 @@ Apify.main(async () => {
         maxRequestRetries: 5,
         preNavigationHooks: [
             async ({ request }) => {
+                // If request has been retried and there is a cookie, swap the cookie for a new one
                 if (request.retryCount) {
                     if (!request.headers.cookie) return;
                     const { cookie } = request.headers;
@@ -47,6 +48,7 @@ Apify.main(async () => {
                 default:
                     break;
                 case consts.LABELS.FIND_ADDRESS: {
+                    // Grab property ID
                     const { address } = request.userData;
                     log.info(`Grabbing PropertyID from ${address}...`);
                     const zpid = json.results[0]?.metaData?.zpid;
@@ -63,6 +65,7 @@ Apify.main(async () => {
 
                     const cookie = getCookie() as string;
 
+                    // Plug property ID into GraphQL endpoint
                     await crawlerRequestQueue?.addRequest(consts.ESTIMATE_REQUEST({ zpid, address, cookie }));
                     break;
                 }

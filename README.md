@@ -14,3 +14,17 @@ Addresses don't have to be 100% exact
     "cookiesToScrape": 3
 }
 ```
+
+## Output
+
+If an address was not found, its results will still be pushed, but `zpid` and `zestimate` will both be `null`
+
+```JSON
+{
+  "zpid": 6891472,
+  "address": "7329 Roamer Pl Las Vegas, NV 89131",
+  "zestimate": 350200
+}
+```
+
+If there is no Zestimate available, `zestimate` will be `"N/A"`

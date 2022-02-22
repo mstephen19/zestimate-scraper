@@ -16,6 +16,14 @@
             "minimum": 1,
             "maximum": 100,
             "editor": "number"
+        },
+        "proxy": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Select proxies to be used by your crawler.",
+            "prefill": {
+                "useApifyProxy": true
+            }
         }
     },
     "required": ["addresses"]
