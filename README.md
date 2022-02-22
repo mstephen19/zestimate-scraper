@@ -2,7 +2,7 @@
 
 Addresses don't have to be 100% exact
 
-``` JSON
+```JSON
 {
     "addresses": [
         "5050 columbus st se unit 194",
@@ -21,6 +21,8 @@ Addresses don't have to be 100% exact
 }
 
 ```
+
+Note that if you run out of cookies, the actor will go to farm more for you, just one at a time.
 
 ## Output
 

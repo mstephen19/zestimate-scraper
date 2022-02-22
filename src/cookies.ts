@@ -69,3 +69,9 @@ export const farmCookies = async (amount: number | undefined = 5): Promise<void>
     await crawler.run();
     log.info(`Farmed ${amount} cookie(s)`);
 };
+
+export const farmNewCookie = async (): Promise<string> => {
+    log.info('Farming a new cookie to be used...');
+    await farmCookies(1);
+    return getCookie() as string;
+};

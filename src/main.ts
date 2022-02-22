@@ -1,6 +1,6 @@
 import Apify, { RequestOptions } from 'apify';
 import * as consts from './consts';
-import { farmCookies, getCookie, removeCookie } from './cookies';
+import { farmCookies, getCookie, removeCookie, farmNewCookie } from './cookies';
 import { Schema, ResultsObject } from './types';
 
 const { log } = Apify.utils;
@@ -42,8 +42,17 @@ Apify.main(async () => {
                 if (request.retryCount) {
                     const { cookie } = request.headers;
                     if (!cookie) return;
+
+                    // Remove that cookie from our list
                     removeCookie(cookie);
-                    request.headers.cookie = getCookie() as string;
+
+                    // Grab a new cookie. If new cookie doesn't exist, farm a new one.
+                    let newCookie: string | undefined = getCookie();
+                    if (!getCookie()) {
+                        newCookie = await farmNewCookie();
+                    }
+
+                    request.headers.cookie = newCookie as string;
                 }
             },
         ],
