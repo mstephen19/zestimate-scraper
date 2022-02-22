@@ -53,6 +53,11 @@ Apify.main(async () => {
 
                     if (!zpid) {
                         log.warning(`${address} not found`);
+                        await Apify.pushData({
+                            zpid: null,
+                            address,
+                            zestimate: null,
+                        });
                         break;
                     }
 
